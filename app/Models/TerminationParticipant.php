@@ -11,9 +11,13 @@ class TerminationParticipant extends Model
     protected $fillable = [
         'termination_id',
         'phone',
+        'participant_jid',
         'name'
     ];
 
+    /**
+     * Get the termination that owns the participant.
+     */
     public function termination(): BelongsTo
     {
         return $this->belongsTo(Termination::class);

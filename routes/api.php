@@ -38,3 +38,6 @@ Route::get('/health', function () {
 });
 
 Route::post('/start-termination', [TerminationController::class, 'start']);
+
+// Evolution API Webhook
+Route::post('/webhook/evolution', [App\Http\Controllers\Api\WebhookController::class, 'handle']);
