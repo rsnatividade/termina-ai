@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Client\Response;
 
 class EvolutionApiService
@@ -28,11 +29,12 @@ class EvolutionApiService
     /**
      * Create a new group in Evolution API
      *
+     * @param string $instance The instance name
      * @param array $participants Array of participant phone numbers
      * @param string $description Group description
      * @return array
      */
-    public function createGroup(array $participants, string $description = ''): array
+    public function createGroup(array $participants, $subject = '', string $description = ''): array
     {
         $response = $this->makeRequest()->post("{$this->baseUrl}/group/create/{$this->instance}", [
             'subject' => (object)[], // Empty object as per API specification
@@ -44,18 +46,50 @@ class EvolutionApiService
     }
 
     /**
+     * Get group invite link
+     *
+     * @param string $groupJid The group ID
+     * @return array
+     */
+    public function getGroupInviteLink(string $groupJid)
+    {
+        $response = $this->makeRequest()->get("{$this->baseUrl}/group/inviteCode/{$this->instance}", [
+            'groupJid' => $groupJid
+        ]);
+
+        return $response->json();
+    }
+
+    /**
+     * Update group image
+     *
+     * @param string $groupJid The group ID
+     * @return array
+     */
+    public function updateGroupImage(string $groupJid)
+    {
+        $response = $this->makeRequest()->put("{$this->baseUrl}/group/updateGroupPicture/{$this->instance}", [
+            'image' => (object)[] // Empty object as per API specification
+        ]);
+
+        return $response->json();
+    }
+
+    /**
      * Send a text message using Evolution API
      *
+     * @param string $instance The instance name
      * @param string $number Recipient's phone number
      * @param string $text Message text content
      * @param array $options Optional message options
      * @return array
      */
     public function sendTextMessage(
+        string $instance,
         string $number,
         string $text,
         array $options = []
-    ): array {
+    ) {
         $payload = [
             'number' => $number,
             'textMessage' => [
@@ -63,14 +97,15 @@ class EvolutionApiService
             ]
         ];
 
+        // Add options if provided
         if (!empty($options)) {
             $payload['options'] = $options;
         }
 
-        $response = $this->makeRequest()->post(
-            "{$this->baseUrl}/message/sendText/{$this->instance}",
-            $payload
-        );
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'apikey' => $this->apiKey
+        ])->post("{$this->baseUrl}/message/sendText/{$instance}", $payload);
 
         return $response->json();
     }
