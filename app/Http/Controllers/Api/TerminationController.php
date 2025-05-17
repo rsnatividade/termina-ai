@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Services\TerminationService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+class TerminationController extends Controller
+{
+    protected $terminationService;
+
+    public function __construct(TerminationService $terminationService)
+    {
+        $this->terminationService = $terminationService;
+    }
+
+    /**
+     * Start a new termination process
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function start(Request $request): JsonResponse
+    {
+        // Validate request
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            // Create termination
+            $termination = $this->terminationService->createTermination(
+                name: $request->input('name'),
+                phone: $request->input('phone')
+            );
+
+            // Create group and send invitation
+            $this->terminationService->createAndInviteToGroup($termination);
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'termination_id' => $termination->id,
+                    'status' => $termination->status
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create termination',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+} 
