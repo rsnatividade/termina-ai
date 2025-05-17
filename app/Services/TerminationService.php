@@ -58,6 +58,7 @@ class TerminationService
             description: "Grupo destinado a ajudar o {$termination->participants->first()->name} a terminar o relacionamento de forma segura"
         );
 
+        //dd($groupResponse);
         if (isset($groupResponse['id'])) {
             // Get group invite link
             $inviteResponse = $this->evolutionApi->getGroupInviteLink(
@@ -85,7 +86,6 @@ class TerminationService
             // Send group link to owner
             if ($groupLink) {
                 $this->evolutionApi->sendTextMessage(
-                    instance: 'default',
                     number: $termination->owner_phone,
                     text: "Aqui está o link do grupo de termino de relacionamento: {$groupLink}"
                 );

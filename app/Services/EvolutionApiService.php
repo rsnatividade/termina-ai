@@ -68,8 +68,8 @@ class EvolutionApiService
      */
     public function updateGroupImage(string $groupJid)
     {
-        $response = $this->makeRequest()->put("{$this->baseUrl}/group/updateGroupPicture/{$this->instance}", [
-            'image' => (object)[] // Empty object as per API specification
+        $response = $this->makeRequest()->post("{$this->baseUrl}/group/updateGroupPicture/{$this->instance}?groupJid={$groupJid}", [
+            'image' => "https://chatltv.com.br/wp-content/uploads/2025/05/group_img.png" // Empty object as per API specification
         ]);
 
         return $response->json();
@@ -78,23 +78,19 @@ class EvolutionApiService
     /**
      * Send a text message using Evolution API
      *
-     * @param string $instance The instance name
      * @param string $number Recipient's phone number
      * @param string $text Message text content
      * @param array $options Optional message options
      * @return array
      */
     public function sendTextMessage(
-        string $instance,
         string $number,
         string $text,
         array $options = []
     ) {
         $payload = [
             'number' => $number,
-            'textMessage' => [
-                'text' => $text
-            ]
+            'text' => $text
         ];
 
         // Add options if provided
@@ -102,10 +98,10 @@ class EvolutionApiService
             $payload['options'] = $options;
         }
 
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'apikey' => $this->apiKey
-        ])->post("{$this->baseUrl}/message/sendText/{$instance}", $payload);
+        $response = $this->makeRequest()->post(
+            "{$this->baseUrl}/message/sendText/{$this->instance}",
+            $payload
+        );
 
         return $response->json();
     }
