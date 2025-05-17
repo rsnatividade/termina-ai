@@ -25,8 +25,8 @@ A Laravel-based application that integrates with Evolution API for WhatsApp auto
 
 ### Dependência de projetos
 Esse projeto de API é utilizado pelos projetos front-end
-https://github.com/AllanOliveiraM/termina-ai-rooms-back
-https://github.com/camilaffonseca/termina-ai-front
+- https://github.com/AllanOliveiraM/termina-ai-rooms-back
+- https://github.com/camilaffonseca/termina-ai-front
 
 ## API Documentation
 
