@@ -7,55 +7,181 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# Termina AI
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+A Laravel-based application that integrates with Evolution API for WhatsApp automation and message handling.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Backend
+- PHP 8.x
+- Laravel 10.x
+- Laravel Sanctum (Authentication)
+- MySQL/PostgreSQL
 
-## Learning Laravel
+### APIs Integration
+- Evolution API (WhatsApp Integration)
+  - Base URL: https://wp.chatltv.com.br
+  - Instance: chatltv
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## API Documentation
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Authentication Endpoints
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### Register
+```http
+POST /api/register
+```
+Create a new user account.
 
-## Laravel Sponsors
+#### Login
+```http
+POST /api/login
+```
+Authenticate user and receive access token.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+#### Logout
+```http
+POST /api/logout
+```
+Invalidate current access token.
 
-### Premium Partners
+### Protected Routes
+All these routes require authentication via Bearer token.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+#### Get User Info
+```http
+GET /api/user
+```
+Retrieve current authenticated user information.
+
+### Termination Process
+
+#### Start Termination
+```http
+POST /api/start-termination
+```
+Initiates the termination process workflow.
+
+### Token Management
+
+#### Get Token Info
+```http
+GET /api/token/{token}
+```
+Retrieve information about a specific token.
+
+### WhatsApp Integration (Evolution API)
+
+#### Webhook Handler
+```http
+POST /api/webhook/evolution
+```
+Handles incoming webhooks from Evolution API.
+
+### Health Check
+
+#### API Status
+```http
+GET /api/health
+```
+Check API health status and timestamp.
+
+## Application Flow
+
+1. **Authentication Flow**
+   - User registers or logs in
+   - Receives authentication token
+   - Uses token for subsequent requests
+
+2. **Termination Process Flow**
+   - Authenticated user initiates termination process
+   - System creates WhatsApp group via Evolution API
+   - Adds participants to the group
+   - Updates group information and image
+   - Sends initial messages
+
+3. **Webhook Processing**
+   - Evolution API sends webhooks for WhatsApp events
+   - System processes incoming messages
+   - Updates relevant records
+   - Triggers appropriate responses
+
+## Environment Configuration
+
+Required environment variables:
+```env
+EVOLUTION_API_URL=https://wp.chatltv.com.br
+EVOLUTION_API_KEY=your-api-key
+EVOLUTION_API_INSTANCE=chatltv
+EVOLUTION_API_TIMEOUT=30
+EVOLUTION_API_RETRY_ATTEMPTS=3
+EVOLUTION_API_RETRY_DELAY=5
+```
+
+## Security
+
+- API authentication using Laravel Sanctum
+- Protected routes requiring valid tokens
+- Secure webhook handling
+- Environment-based configuration
+- No hardcoded credentials
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   composer install
+   ```
+3. Copy environment file:
+   ```bash
+   cp .env.example .env
+   ```
+4. Generate application key:
+   ```bash
+   php artisan key:generate
+   ```
+5. Configure database in `.env`
+6. Run migrations:
+   ```bash
+   php artisan migrate
+   ```
+7. Configure Evolution API credentials in `.env`
+
+## Development
+
+To start the development server:
+```bash
+php artisan serve
+```
+
+## Testing
+
+Run the test suite:
+```bash
+php artisan test
+```
+
+## Error Handling
+
+The API returns standard HTTP status codes:
+- 200: Success
+- 400: Bad Request
+- 401: Unauthorized
+- 403: Forbidden
+- 404: Not Found
+- 422: Validation Error
+- 500: Server Error
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Fork the repository
+2. Create feature branch
+3. Commit changes
+4. Push to branch
+5. Create Pull Request
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License.
