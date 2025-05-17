@@ -8,11 +8,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TerminationParticipant extends Model
 {
+    const TYPE_TERMINATOR = 'terminator';
+    const TYPE_TERMINATED = 'terminated';
+    const TYPE_AUDITORIUM = 'auditorium';
+
     protected $fillable = [
         'termination_id',
         'phone',
         'participant_jid',
-        'name'
+        'name',
+        'token',
+        'type'
     ];
 
     /**

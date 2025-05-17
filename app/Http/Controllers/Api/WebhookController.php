@@ -198,10 +198,14 @@ class WebhookController extends Controller
 
             if ($aiResponse) {
                 // Send AI response
-                $this->evolutionApi->sendTextMessage(
-                    $termination->group_id,
-                    $aiResponse
-                );
+                Log::info('Sending AI response', [
+                    'termination_id' => $termination->id,
+                    'ai_response' => $aiResponse
+                ]);
+                //$this->evolutionApi->sendTextMessage(
+                //    $termination->group_id,
+                //    $aiResponse
+                //);
             }
         }
 

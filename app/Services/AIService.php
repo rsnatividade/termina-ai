@@ -53,7 +53,9 @@ class AIService
                 'role' => 'user',
                 'content' => $prompt
             ];
-
+            Log::info('Sending request to OpenAI', [
+                'messages' => $messages
+            ]);
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
                 'Content-Type' => 'application/json',

@@ -8,10 +8,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Termination extends Model
 {
     protected $fillable = [
+        'name',
         'owner_phone',
         'group_id',
         'group_link',
-        'status'
+        'status',
+        'chosen_message',
+        'scenario',
+        'soundtrack'
     ];
 
     public function participants(): HasMany

@@ -51,4 +51,12 @@ return [
         'retry_delay' => env('INSTANCE_RETRY_DELAY', 5),
     ],
 
+    'openai' => [
+        'key' => env('OPENAI_API_KEY'),
+        'url' => env('OPENAI_API_URL', 'https://api.openai.com/v1/chat/completions'),
+        'model' => env('OPENAI_MODEL', 'gpt-4'),
+        'max_tokens' => env('OPENAI_MAX_TOKENS', 1000),
+        'temperature' => env('OPENAI_TEMPERATURE', 0.7),
+    ],
+
 ];

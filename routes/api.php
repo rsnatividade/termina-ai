@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TerminationController;
+use App\Http\Controllers\Api\TokenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,3 +42,5 @@ Route::post('/start-termination', [TerminationController::class, 'start']);
 
 // Evolution API Webhook
 Route::post('/webhook/evolution', [App\Http\Controllers\Api\WebhookController::class, 'handle']);
+
+Route::get('/token/{token}', [TokenController::class, 'show']);
