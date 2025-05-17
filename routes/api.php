@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\TerminationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,3 +36,5 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/health', function () {
     return response()->json(['status' => 'healthy', 'timestamp' => now()]);
 });
+
+Route::post('/start-termination', [TerminationController::class, 'start']);
