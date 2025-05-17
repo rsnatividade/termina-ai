@@ -9,9 +9,20 @@ use App\Models\Message;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Services\EvolutionApiService;
+use App\Services\AIService;
 
 class WebhookController extends Controller
 {
+    protected EvolutionApiService $evolutionApi;
+    protected AIService $aiService;
+
+    public function __construct(EvolutionApiService $evolutionApi, AIService $aiService)
+    {
+        $this->evolutionApi = $evolutionApi;
+        $this->aiService = $aiService;
+    }
+
     /**
      * Handle Evolution API webhook events
      *
@@ -152,6 +163,48 @@ class WebhookController extends Controller
             return;
         }
 
+        $messageContent = $message['conversation'] ?? '';
+
+        // Check for "vamos comecar" message from group owner
+        if (strtolower($messageContent) === 'vamos comecar' || 
+            levenshtein(strtolower($messageContent), 'vamos comecar') <= 3) {
+            
+            // Check if the message is from the group owner
+            if ($participant->phone === $termination->owner_phone) {
+                Log::info('Updating termination status to collecting_answers', [
+                    'termination_id' => $termination->id,
+                    'participant_id' => $participant->id
+                ]);
+
+                // Update termination status
+                $termination->update(['status' => 'collecting_answers']);
+
+                // Send initial message
+                $this->evolutionApi->sendTextMessage(
+                    $termination->group_id,
+                    "Me conte o que aconteceu"
+                );
+            }
+        }
+
+        // Process messages if we're in collecting_answers status
+        if ($termination->status === 'collecting_answers' && !$key['fromMe']) {
+            // Get AI response
+            $aiResponse = $this->aiService->getResponse($messageContent, [
+                'termination_id' => $termination->id,
+                'participant_name' => $pushName,
+                'message_history' => $this->getMessageHistory($termination)
+            ]);
+
+            if ($aiResponse) {
+                // Send AI response
+                $this->evolutionApi->sendTextMessage(
+                    $termination->group_id,
+                    $aiResponse
+                );
+            }
+        }
+
         // Store the message
         $messageData = [
             'termination_id' => $termination->id,
@@ -160,7 +213,7 @@ class WebhookController extends Controller
             'sender_phone' => $participant->phone,
             'sender_name' => $pushName,
             'message_type' => $messageType,
-            'content' => $message['conversation'] ?? null,
+            'content' => $messageContent,
             'sent_at' => date('Y-m-d H:i:s', $messageTimestamp),
             'status' => $data['status'] ?? null,
             'from_me' => $key['fromMe'] ?? false,
@@ -175,5 +228,27 @@ class WebhookController extends Controller
             'participant_id' => $participant->id,
             'participant_jid' => $participantJid
         ]);
+    }
+
+    /**
+     * Get message history for context
+     *
+     * @param Termination $termination
+     * @return array
+     */
+    protected function getMessageHistory(Termination $termination): array
+    {
+        return $termination->messages()
+            ->orderBy('sent_at', 'desc')
+            ->limit(10)
+            ->get()
+            ->map(function ($message) {
+                return [
+                    'sender' => $message->sender_name,
+                    'content' => $message->content,
+                    'timestamp' => $message->sent_at
+                ];
+            })
+            ->toArray();
     }
 } 

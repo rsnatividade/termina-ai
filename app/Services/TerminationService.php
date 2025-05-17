@@ -89,6 +89,11 @@ class TerminationService
                     number: $termination->owner_phone,
                     text: "Aqui está o link do grupo de termino de relacionamento: {$groupLink}"
                 );
+
+                $this->evolutionApi->sendTextMessage(
+                    number: $groupResponse['id'],
+                    text: "{$termination->participants->first()->name}: Quando estiver pronto, mande um 'Vamos começar'"
+                );
             }
         }
     }
