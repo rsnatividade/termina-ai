@@ -26,6 +26,7 @@ class TerminationController extends Controller
     public function start(Request $request): JsonResponse
     {
         // Validate request
+        //melhoar o validation remove caracteres especiais
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20'

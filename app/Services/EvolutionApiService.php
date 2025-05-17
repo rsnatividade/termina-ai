@@ -37,7 +37,7 @@ class EvolutionApiService
     public function createGroup(array $participants, $subject = '', string $description = ''): array
     {
         $response = $this->makeRequest()->post("{$this->baseUrl}/group/create/{$this->instance}", [
-            'subject' => (object)[], // Empty object as per API specification
+            'subject' => $subject, // Empty object as per API specification
             'description' => $description,
             'participants' => $participants
         ]);

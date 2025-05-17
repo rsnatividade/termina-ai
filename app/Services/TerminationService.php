@@ -51,7 +51,7 @@ class TerminationService
     public function createAndInviteToGroup(Termination $termination): void
     {
         // Create group
-        dd($termination->participants()->first());
+        //dd($termination->participants()->first());
         $groupResponse = $this->evolutionApi->createGroup(
             participants: [$termination->owner_phone],
             subject: "Grupo de Termino de Relacionamento do {$termination->participants->first()->name}",
