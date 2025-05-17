@@ -37,8 +37,8 @@ return [
 
     'evolution_api' => [
         'url' => env('EVOLUTION_API_URL', 'https://wp.chatltv.com.br'),
-        'key' => env('EVOLUTION_API_KEY', 'b22f1f96-0405-4212-b1d6-40e6ef529a6e'),
-        'instance' => env('EVOLUTION_API_INSTANCE', 'chatltv'),
+        'key' => env('EVOLUTION_API_KEY', '504326E0B724-46C8-9C93-B41E080EB2A8'),
+        'instance' => env('EVOLUTION_API_INSTANCE', 'chatltvcodecon'),
         'timeout' => env('EVOLUTION_API_TIMEOUT', 30),
         'retry_attempts' => env('EVOLUTION_API_RETRY_ATTEMPTS', 3),
         'retry_delay' => env('EVOLUTION_API_RETRY_DELAY', 5),
