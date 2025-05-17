@@ -128,6 +128,7 @@ class EvolutionApiService
      */
     protected function makeRequest()
     {
+        sleep(3);
         return Http::timeout($this->timeout)
             ->retry($this->retryAttempts, $this->retryDelay)
             ->withHeaders([

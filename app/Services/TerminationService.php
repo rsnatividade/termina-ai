@@ -90,8 +90,6 @@ class TerminationService
                     text: "Aqui está o link do grupo de termino de relacionamento: {$groupLink}"
                 );
 
-                sleep(3);
-                
                 $this->evolutionApi->sendTextMessage(
                     number: $groupResponse['id'],
                     text: "{$termination->participants->first()->name}: Quando estiver pronto, mande um 'Vamos começar'"
