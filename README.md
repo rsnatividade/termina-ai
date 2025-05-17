@@ -22,38 +22,13 @@ A Laravel-based application that integrates with Evolution API for WhatsApp auto
 ### APIs Integration
 - Evolution API (WhatsApp Integration)
   - Base URL: https://wp.chatltv.com.br
-  - Instance: chatltv
+
+### Dependência de projetos
+Esse projeto de API é utilizado pelos projetos front-end
+https://github.com/AllanOliveiraM/termina-ai-rooms-back
+https://github.com/camilaffonseca/termina-ai-front
 
 ## API Documentation
-
-### Authentication Endpoints
-
-#### Register
-```http
-POST /api/register
-```
-Create a new user account.
-
-#### Login
-```http
-POST /api/login
-```
-Authenticate user and receive access token.
-
-#### Logout
-```http
-POST /api/logout
-```
-Invalidate current access token.
-
-### Protected Routes
-All these routes require authentication via Bearer token.
-
-#### Get User Info
-```http
-GET /api/user
-```
-Retrieve current authenticated user information.
 
 ### Termination Process
 
