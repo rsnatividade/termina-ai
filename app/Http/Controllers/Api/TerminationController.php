@@ -48,7 +48,7 @@ class TerminationController extends Controller
                 phone: $request->input('phoneTerminator')
             );
 
-            $cuid = Str::uuid();
+            $cuid = uniqid();
             $termination->participants()->create([
                 'name' => $request->input('nameTerminated'),
                 'phone' => $request->input('phoneTerminated'),
