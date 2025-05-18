@@ -67,7 +67,7 @@ class TerminationService
         //dd($termination->participants()->first());
         $groupResponse = $this->evolutionApi->createGroup(
             participants: [$termination->owner_phone],
-            subject: "Grupo de Termino de Relacionamento do {$termination->participants->first()->name}",
+            subject: "Grupo de Término de Relacionamento do {$termination->participants->first()->name}",
             description: "Grupo destinado a ajudar o {$termination->participants->first()->name} a terminar o relacionamento de forma segura"
         );
 
@@ -100,7 +100,7 @@ class TerminationService
             if ($groupLink) {
                 $this->evolutionApi->sendTextMessage(
                     number: $termination->owner_phone,
-                    text: "Aqui está o link, para convidar outras pessoas, do grupo de termino de relacionamento: {$groupLink}"
+                    text: "Aqui está o link, para convidar outras pessoas, para o grupo de termino de relacionamento: {$groupLink}"
                 );
 
                 $this->evolutionApi->sendTextMessage(
