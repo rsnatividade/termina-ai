@@ -136,4 +136,25 @@ class EvolutionApiService
                 'apikey' => $this->apiKey
             ]);
     }
+
+    /**
+     * Get WhatsApp number information
+     *
+     * @param string $phone Phone number to check
+     * @return array|null WhatsApp number information or null if not found
+     */
+    public function getWhatsAppNumber(string $phone): ?array
+    {
+        $response = $this->makeRequest()->post(
+            "{$this->baseUrl}/chat/whatsappNumbers/{$this->instance}",
+            ['numbers' => [$phone]]
+        );
+
+        if ($response->successful()) {
+            $data = $response->json();
+            return $data[0] ?? null; // Return the first number's info since we only send one
+        }
+
+        return null;
+    }
 } 

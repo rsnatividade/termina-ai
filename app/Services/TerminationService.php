@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Termination;
 use App\Models\TerminationParticipant;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class TerminationService
 {
@@ -27,6 +28,13 @@ class TerminationService
         // Clean phone number (remove non-digit characters)
         $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
 
+        // Get WhatsApp number information
+        $whatsappInfo = $this->evolutionApi->getWhatsAppNumber($cleanPhone);
+
+        if (!$whatsappInfo || !isset($whatsappInfo['jid'])) {
+            Log::warning('WhatsApp number not found or invalid', ['phone' => $cleanPhone]);
+        }
+
         // Create termination
         $termination = Termination::create([
             'owner_phone' => $cleanPhone,
@@ -40,7 +48,8 @@ class TerminationService
             'phone' => $cleanPhone,
             'name' => $name,
             'token' => uniqid(),
-            'type' => 'terminator'
+            'type' => 'terminator',
+            'participant_jid' => $whatsappInfo['jid'] ?? null
         ]);
 
         return $termination;
