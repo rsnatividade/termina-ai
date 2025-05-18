@@ -30,14 +30,16 @@ class TerminationService
         // Create termination
         $termination = Termination::create([
             'owner_phone' => $cleanPhone,
-            'status' => 'waiting_friends'
+            'status' => 'waiting_friends',
+            'scenario' => 'cemiterio_amor',
+            'soundtrack' => 'fim_de_nos_dois'
         ]);
 
         // Create owner as participant
         $termination->participants()->create([
             'phone' => $cleanPhone,
             'name' => $name,
-            'token' => Str::uuid(),
+            'token' => uniqid(),
             'type' => 'terminator'
         ]);
 
@@ -89,7 +91,7 @@ class TerminationService
             if ($groupLink) {
                 $this->evolutionApi->sendTextMessage(
                     number: $termination->owner_phone,
-                    text: "Aqui está o link do grupo de termino de relacionamento: {$groupLink}"
+                    text: "Aqui está o link, para convidar outras pessoas, do grupo de termino de relacionamento: {$groupLink}"
                 );
 
                 $this->evolutionApi->sendTextMessage(
