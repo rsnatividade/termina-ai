@@ -58,7 +58,7 @@ class TerminationController extends Controller
 
             // Create group and send invitation
             //@todo descomentar antes de por pra rodar pra valer
-            //$this->terminationService->createAndInviteToGroup($termination);
+            $this->terminationService->createAndInviteToGroup($termination);
 
             return response()->json([
                 'success' => true,
