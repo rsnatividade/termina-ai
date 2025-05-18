@@ -29,7 +29,8 @@ class TerminationController extends Controller
         //melhoar o validation remove caracteres especiais
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20'
+            'phoneTerminator' => 'required|string|max:20',
+            'phoneTerminated' => 'required|string|max:20'
         ]);
 
         if ($validator->fails()) {
@@ -43,8 +44,15 @@ class TerminationController extends Controller
             // Create termination
             $termination = $this->terminationService->createTermination(
                 name: $request->input('name'),
-                phone: $request->input('phone')
+                phone: $request->input('phoneTerminator')
             );
+
+            $cuid = Str::uuid();
+            $termination->participants()->create([
+                'phone' => $request->input('phoneTerminated'),
+                'token' => $cuid,
+                'type' => 'terminated'
+            ]);
 
             // Create group and send invitation
             $this->terminationService->createAndInviteToGroup($termination);

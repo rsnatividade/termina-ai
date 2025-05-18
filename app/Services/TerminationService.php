@@ -36,7 +36,9 @@ class TerminationService
         // Create owner as participant
         $termination->participants()->create([
             'phone' => $cleanPhone,
-            'name' => $name
+            'name' => $name,
+            'token' => Str::uuid(),
+            'type' => 'terminator'
         ]);
 
         return $termination;

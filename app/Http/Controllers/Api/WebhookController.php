@@ -95,9 +95,12 @@ class WebhookController extends Controller
             if ($action === 'add') {
                 // Add new participant if they don't exist
                 if (!$termination->participants()->where('phone', $cleanPhone)->exists()) {
+                    $cuid = Str::uuid();
                     $termination->participants()->create([
                         'phone' => $cleanPhone,
-                        'participant_jid' => $participantJid
+                        'participant_jid' => $participantJid,
+                        'token' => $cuid,
+                        'type' => 'auditorium'
                     ]);
 
                     Log::info('Added new participant to termination', [
